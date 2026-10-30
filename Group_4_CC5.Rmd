@@ -96,7 +96,7 @@ summary(lat_mod)
 
 **Question 2:** Write out the fitted equation with the numbers filled in ($y = \beta_0 + \beta_1 x$). In plain language, what does the slope mean (with units), and what does the R² mean? Is the intercept biologically meaningful?
 
-**Answer:** $y = 26.53188 - 0.45460 * x$
+**Answer:** $y = 26.53188 - 0.45460x$
 
 # ANOVA
 
