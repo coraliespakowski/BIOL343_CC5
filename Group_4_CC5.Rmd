@@ -124,7 +124,7 @@ anova(ms_mod)
 
 **Question 3:** The summary has an `(Intercept)` row and a `self_incSI` row, but no `self_incSC` row. What does each of the two estimates represent, and how do they relate to the SI and SC means you calculated in CC4? Compare the `self_incSI` estimate with the 95% confidence interval of the difference from your CC4 *t*-test.
 
-**Answer:**
+**Answer:** In the summary positron is using SC in the self_inc as a reference group. Therefore there is only self_incSI displayed. Intercept represents the mean flower face diameter for the SC group, while self_incSI estimates the diﬀerence in mean flower face diameter between the two groups. Since SC is the reference group the diﬀerence will be estimated by SImean - SCmean. The linear modle predict the diﬀerence between the mean of self_inc is 4.58 which lies in between the confidence interval of 4.37 to 4.79.
 
 # Part 3 — Two predictors {-}
 
@@ -209,13 +209,13 @@ ggplot(floral_data, aes(x = self_inc, y = residuals)) +
 
 **Question 5:** A linear model makes two key assumptions about its residuals. State them. For each one, say whether these plots suggest the two-predictor model meets it, naming the plot that tells you. If an assumption is violated, what could you do about it?
 
-**Answer:** A linear model assumes its residuals are approximately normally distributed and have equal variance accross predicted values. To examine the assumption of normality, we look at the histogram and the Q-Q plot. It shows approximate normal distribution with the histogramn in a bell shaped curve and the Q-Q plot values falling along the diagonal, and thus this assumption is met. If this assumption was violated you could **XXXX**. To examine the assumption of homoscedasticity, we look at the scatter plot of residuals against predicted values. Residuals should be randomly scattered around zero with a relatively consistent spread, rather than showing a systematic pattern. This does not seem to be the case here. Since this assumption was violated we can **XXXXX**
+**Answer:** A linear model assumes its residuals are approximately normally distributed and have equal variance accross predicted values. To examine the assumption of normality, we look at the histogram and the Q-Q plot. It shows approximate normal distribution with the histogramn in a bell shaped curve and the Q-Q plot values falling along the diagonal, and thus this assumption is met. If this assumption was violated you could check for outliers or skewness, or you could consider transforming the response variable (e.g., log or square-root transformation). To examine the assumption of homoscedasticity, we look at the scatter plot of residuals against predicted values. Here, the error variance was not evenly distributed in the vertical axis. Groups around predicted values of 10-11 shows a wider variation. This heteroscadasticity suggest the second assumption was not met. With the assumption violated, we could transform the response variable, use weighted least squares, or consider a model that accounts for unequal variance.
 
 # Report the result
 
 Make a publication-quality figure of the two-predictor model (the task-4 plot, tidied), with a caption given by the chunk option `fig.cap = "..."` and the code hidden with `echo = FALSE`, so that only the figure and its caption appear in the knitted document. Then, on the **Answer** line, write a short results paragraph (three or four sentences) as you would for a paper or a presentation slide: the model you fitted, the estimates with their standard errors and test statistics, the R², and what the result means biologically.
 
-```{r final-figure, echo=FALSE, message=FALSE, fig.cap="Write your caption here."}
+```{r final-figure, echo=FALSE, message=FALSE, fig.cap="Figure 1. Scatter plot of flower face diameter in relation to habitat latitude. The blue colour points represents the self-incompatible(SI) mating type for Abronia umbellata flower, while the pink colour represents self-compatible(SC) population. Data used for this graph was collected by Laura Doubleday in Chris Eckert’s lab at Queen’s University. Each point represents one individual with a best-fit line for each population. In total there are 966 individual samples collected. The shaded area around the best-fit line shows the 95% confidence interval."}
 ggplot(aes(x = latitude_N, y = face_diam_mm), data = floral_data) +
   geom_point(aes(colour = self_inc)) +
   geom_smooth(method = "lm", formula = y ~ x) +
@@ -223,11 +223,11 @@ ggplot(aes(x = latitude_N, y = face_diam_mm), data = floral_data) +
   theme_classic()
 ```
 
-**Answer:**
+**Answer:** In this statistical analysis we fitted a linear model to predict the flower face diameter with latitude. The linear regression shows a positive relationship between the flower face diameter and latitude, with a slope of 0.46 +/- 0.046mm/degree. T-statistic is estimated to be 9.953 and p-value < 2e-16. Based on the graph, SI poplation found in lower latitude have a larger flower face diameter than SC population grow on higher latitude. The model also showed a flower face diameter variation with R^2 = 0.4777 and F-statistic from 2-963 degree of freedom 440.3, with p-value = 2.2e-16. Since both the p-values are smaller than 0.05, this result is statistically significant. Biologically the pattern suggest flowers growing on higher latitude with smaller flower fece diameter is tightly correlated with their mating types.
 
 **Question 6 (reflection):** Your final project will ask for exactly this step on the class dataset. In one or two sentences each: what response and which predictor(s) from the class dataset would you choose, and which of the checks in task 5 do you expect to be the problem?
 
-**Answer:**
+**Answer:** I would choose flower tube length to be the response with mating type and latitude as predictors. I will be using the dataset to explore the how flower tube length are influenced by the latitude and mating system. The scatter plot of the residual is expected to be the problem as the dataset collected more samples on SI population. Therefore it is expected to show a wider variation amoung the tube length.
 
 # DO THIS LAST {-}
 
