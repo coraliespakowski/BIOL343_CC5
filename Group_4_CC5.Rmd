@@ -57,11 +57,18 @@ Import the observations, save them as an object called `floral_data`, and check 
 
 ```{r import-data}
 # floral_data <-
+floral_data <- read.csv(
+  "/Users/coraliespakowski/Desktop/BIOL 343/BIOL343_CC5/Data/AbroniaFloralData.csv"
+)
+
+# check dimensions structure
+dim(floral_data)
+str(floral_data) # shows that they are correct variable types
 ```
 
 **Question 1:** Which columns of this dataset could be **response** variables in a basic linear model, and which could be **predictors**? For each predictor you name, say whether it is continuous or nominal.
 
-**Answer:**
+**Answer:** 'self_inc' (nominal), 'site' (nominal), and 'latitude' (continuous) could be predictor variables. Meanwhile, 'umbel_angle_deg' (continuous), 'flower_number' (continuous), face_diam_mm (continuous), and 'tube_length_mm' (continuous) could be response variables.
 
 # Part 2 — One predictor {-}
 
@@ -70,19 +77,49 @@ Import the observations, save them as an object called `floral_data`, and check 
 Plot face diameter (y) against latitude (x) with a fitted straight line through the points, axis labels with units and a clean theme. Then fit a linear model with face diameter as the response and latitude as the only predictor, and print its summary.
 
 ```{r regression, message=FALSE}
+# load library
+library(ggplot2)
+
+# Plot and fitted line
+ggplot(aes(x = latitude_N, y = face_diam_mm), data = floral_data) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Latitude, Nº", y = "Face diameter, mm") +
+  theme_classic()
+
 # lat_mod <-
+lat_mod <- lm(floral_data$face_diam_mm ~ floral_data$latitude_N)
+
+# print summary
+summary(lat_mod)
 ```
 
 **Question 2:** Write out the fitted equation with the numbers filled in ($y = \beta_0 + \beta_1 x$). In plain language, what does the slope mean (with units), and what does the R² mean? Is the intercept biologically meaningful?
 
-**Answer:**
+**Answer:** $y = 26.53188 - 0.45460 * x$
 
 # ANOVA
 
 Draw a boxplot of face diameter by mating system. Then fit a linear model with mating system as the only predictor, and print both the summary and the analysis-of-variance table for the model.
 
 ```{r anova}
+# boxplot
+ggplot(aes(y = face_diam_mm, x = self_inc), data = floral_data) +
+  geom_boxplot() +
+  labs(x = "Mating system", y = "Face diameter, mm") +
+  theme_classic()
+
 # ms_mod <-
+ms_mod <- lm(
+  floral_data$face_diam_mm ~ floral_data$self_inc,
+  data = floral_data
+)
+
+# printed summary
+summary(ms_mod)
+
+# printed anova
+anova(ms_mod)
 ```
 
 **Question 3:** The summary has an `(Intercept)` row and a `self_incSI` row, but no `self_incSC` row. What does each of the two estimates represent, and how do they relate to the SI and SC means you calculated in CC4? Compare the `self_incSI` estimate with the 95% confidence interval of the difference from your CC4 *t*-test.
@@ -97,11 +134,25 @@ Fit a model with **both** latitude and mating system as predictors, and print th
 
 ```{r two-predictors}
 # both_mod <-
+both_mod <- lm(face_diam_mm ~ latitude_N + self_inc, data = floral_data)
+
+# print summary
+summary(both_mod)
+
+# print anova table
+anova(both_mod)
+
+# plot face diameter against latitude, coloured by mating system, with a fitted straight line for each mating system
+ggplot(aes(x = latitude_N, y = face_diam_mm), data = floral_data) +
+  geom_point(aes(colour = self_inc)) +
+  geom_smooth(method = "lm", aes(position = self_inc)) +
+  labs(x = "Latitude, Nº", y = "Face diameter, mm", colour = "Mating system") +
+  theme_classic()
 ```
 
 **Question 4:** Compare the latitude slope in this model with the slope from task 2. What happened, and why? Which predictor explains the small flowers of the northern populations, mating system or latitude?
 
-**Answer:**
+**Answer:** The latitude slope is steeper in this model and is positive for SI and negative for SC. What happened is that the equation is adjusted to account for the types of mating system and since both mating systems appear in different latitudes and have different face diameter trends, the slope is different. The predictor that that explains the small flowers of the northern populations is likely the mating system.
 
 # Part 4 — QA/QC {-}
 
@@ -110,7 +161,20 @@ Fit a model with **both** latitude and mating system as predictors, and print th
 For the two-predictor model from task 4, add the residuals and the predicted values to `floral_data` and make four diagnostic plots: a histogram of the residuals, a Q-Q plot of the residuals, a scatterplot of the residuals against the predicted values, and a boxplot of the residuals by mating system.
 
 ```{r qc-plots, message=FALSE}
+# floral_data$predicted <-
+floral_data$predicted <- fitted(both_mod)
+
 # floral_data$residuals <-
+floral_data$residuals <- residuals(both_mod)
+
+# diagnostic plots
+# histogram of the residuals
+
+# Q-Q plot of the residuals
+
+# scatter plots of the residualts against predicted values
+
+# boxplot of the residuals by mating system
 ```
 
 **Question 5:** A linear model makes two key assumptions about its residuals. State them. For each one, say whether these plots suggest the two-predictor model meets it, naming the plot that tells you. If an assumption is violated, what could you do about it?
