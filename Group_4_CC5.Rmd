@@ -145,7 +145,7 @@ anova(both_mod)
 # plot face diameter against latitude, coloured by mating system, with a fitted straight line for each mating system
 ggplot(aes(x = latitude_N, y = face_diam_mm), data = floral_data) +
   geom_point(aes(colour = self_inc)) +
-  geom_smooth(method = "lm", aes(position = self_inc)) +
+  geom_smooth(method = "lm", formula = y ~ x) +
   labs(x = "Latitude, Nº", y = "Face diameter, mm", colour = "Mating system") +
   theme_classic()
 ```
@@ -169,24 +169,58 @@ floral_data$residuals <- residuals(both_mod)
 
 # diagnostic plots
 # histogram of the residuals
+ggplot(floral_data, aes(x = residuals)) +
+  geom_histogram(bins = 30, fill = "lightblue", color = "black") +
+  labs(title = "Histogram of Residuals", x = "Residuals", y = "Frequency") +
+  theme_classic()
 
 # Q-Q plot of the residuals
+ggplot(floral_data, aes(sample = residuals)) +
+  stat_qq() +
+  stat_qq_line(color = "red") +
+  labs(
+    title = "Q-Q Plot of Residuals",
+    x = "Theoretical quantiles",
+    y = "Sample quantiles"
+  ) +
+  theme_classic()
 
-# scatter plots of the residualts against predicted values
+# scatter plot of residuals against predicted values
+ggplot(floral_data, aes(x = predicted, y = residuals)) +
+  geom_point(color = "steelblue", alpha = 0.7) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Residuals vs Predicted Values",
+    x = "Predicted values",
+    y = "Residuals"
+  ) +
+  theme_classic()
 
-# boxplot of the residuals by mating system
+# boxplot of residuals by mating system
+ggplot(floral_data, aes(x = self_inc, y = residuals)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(
+    title = "Residuals by Mating System",
+    x = "Mating system",
+    y = "Residuals"
+  ) +
+  theme_classic()
 ```
 
 **Question 5:** A linear model makes two key assumptions about its residuals. State them. For each one, say whether these plots suggest the two-predictor model meets it, naming the plot that tells you. If an assumption is violated, what could you do about it?
 
-**Answer:**
+**Answer:** A linear model assumes its residuals are approximately normally distributed and have equal variance accross predicted values. To examine the assumption of normality, we look at the histogram and the Q-Q plot. It shows approximate normal distribution with the histogramn in a bell shaped curve and the Q-Q plot values falling along the diagonal, and thus this assumption is met. If this assumption was violated you could **XXXX**. To examine the assumption of homoscedasticity, we look at the scatter plot of residuals against predicted values. Residuals should be randomly scattered around zero with a relatively consistent spread, rather than showing a systematic pattern. This does not seem to be the case here. Since this assumption was violated we can **XXXXX**
 
 # Report the result
 
 Make a publication-quality figure of the two-predictor model (the task-4 plot, tidied), with a caption given by the chunk option `fig.cap = "..."` and the code hidden with `echo = FALSE`, so that only the figure and its caption appear in the knitted document. Then, on the **Answer** line, write a short results paragraph (three or four sentences) as you would for a paper or a presentation slide: the model you fitted, the estimates with their standard errors and test statistics, the R², and what the result means biologically.
 
 ```{r final-figure, echo=FALSE, message=FALSE, fig.cap="Write your caption here."}
-
+ggplot(aes(x = latitude_N, y = face_diam_mm), data = floral_data) +
+  geom_point(aes(colour = self_inc)) +
+  geom_smooth(method = "lm", formula = y ~ x) +
+  labs(x = "Latitude, Nº", y = "Face diameter, mm", colour = "Mating system") +
+  theme_classic()
 ```
 
 **Answer:**
